@@ -21,7 +21,7 @@
   var path = (collect && /^\/(?!\/)/.test(collect)) ? collect : location.pathname + location.search + location.hash;
   var url = 'https://' + host + path;
   var link = document.querySelector('link[rel=canonical]');
-  try {
+  if (host === 'focal-point.co') try {   // only the main site unpacks saved data (/js/domain-move.js)
     var SENT = 'fp-moved-sent', items = {}, size = 0;
     if (collect || !localStorage.getItem(SENT)) {
       for (var i = 0; i < localStorage.length; i++) {
