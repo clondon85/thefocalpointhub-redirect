@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Focal Point has moved to focal-point.co</title>
+<script>
+/* thefocalpointhub.com -> focal-point.co. Sends every visitor to the same page on the new domain and
+   carries their saved browser data (course progress, reflections, logins) in the URL fragment, which
+   never reaches a server. /js/domain-move.js on the new site unpacks it. ?fpcollect=<path> is the new
+   site asking for that data for someone who went there directly. */
+(function () {
+  var map = {
+    'thefocalpointhub.com': 'focal-point.co', 'www.thefocalpointhub.com': 'focal-point.co',
+    'learn.thefocalpointhub.com': 'learn.focal-point.co', 'courses.thefocalpointhub.com': 'courses.focal-point.co'
+  };
+  var host = map[location.hostname] || 'focal-point.co';
+  var collect = null;
+  try { collect = new URLSearchParams(location.search).get('fpcollect'); } catch (e) {}
+  var path = (collect && /^\/(?!\/)/.test(collect)) ? collect : location.pathname + location.search + location.hash;
+  var url = 'https://' + host + path;
+  var link = document.querySelector('link[rel=canonical]');
+  try {
+    var SENT = 'fp-moved-sent', items = {}, size = 0;
+    if (collect || !localStorage.getItem(SENT)) {
+      for (var i = 0; i < localStorage.length; i++) {
+        var k = localStorage.key(i), v = localStorage.getItem(k);
+        if (k === SENT || v === null || v.length > 300000 || size + v.length > 1500000) continue;
+        items[k] = v; size += k.length + v.length;
+      }
+      localStorage.setItem(SENT, String(Date.now()));
+    }
+    var packed = encodeURIComponent(btoa(unescape(encodeURIComponent(JSON.stringify({ v: 1, items: items })))));
+    url += (url.indexOf('#') > -1 ? '&' : '#') + 'fpmove=' + packed;
+  } catch (e) {}
+  location.replace(url);
+})();
+</script>
+<noscript><meta http-equiv="refresh" content="0; url=https://focal-point.co/"></noscript>
+<style>
+body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;
+font-family:'Plus Jakarta Sans',system-ui,sans-serif;color:#FFFCF6;
+background:linear-gradient(155deg,#3a7a85 0%,#5BAAB5 20%,#7c3a82 50%,#9F217E 75%,#7a1860 100%) fixed}
+a{color:#EACC28}
+</style>
+</head>
+<body>
+<p>Focal Point now lives at <a href="https://focal-point.co/">focal-point.co</a>. Taking you there now.</p>
+</body>
+</html>
